@@ -6,22 +6,6 @@ import 'package:flutter/services.dart';
 import 'add_exercise.dart';
 import 'exercise_details.dart';
 
-Future<List<Exercise>> fetchExercises() async {
-  final response = await http.get(Uri.parse('https://localhost:7152/api/Exercise'));
-  if (response.statusCode == 200) {
-    final List<dynamic> jsonResponse = jsonDecode(response.body);
-    List<Exercise> exercises = [];
-
-    for (var exerciseData in jsonResponse) {
-      Exercise exercise = Exercise.fromJson(exerciseData);
-      exercises.add(exercise);
-    }
-    return exercises;
-  } else {
-    throw Exception('Failed to load exercises');
-  }
-}
-
 class Exercise {
   final int id;
   final String name;
@@ -49,34 +33,83 @@ class Exercise {
       durationInSeconds: json['durationInSeconds'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'startDoingHour': startDoingHour,
+      'startDoingMinutes': startDoingMinutes,
+      'durationInSeconds': durationInSeconds,
+    };
+  }
+}
+
+class ExerciseProxy {
+  List<Exercise> exercises = [];
+
+  Future<List<Exercise>> getExercises() async {
+    if (exercises.isEmpty) {
+      await fetchExercises();
+    }
+    return exercises;
+  }
+
+  Future<void> addExercise(Exercise exercise) async {
+    var headers = {'Content-Type': 'application/json'};
+    var response = await http.post(
+      Uri.parse('https://localhost:7152/api/Exercise'),
+      headers: headers,
+      body: jsonEncode(exercise.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      await fetchExercises();
+    } else {
+      print('Error saving exercise: ${response.statusCode}');
+    }
+  }
+
+  Future<void> fetchExercises() async {
+    var response = await http.get(Uri.parse('https://localhost:7152/api/Exercise'));
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      exercises = List<Exercise>.from(data.map((exercise) {
+        return Exercise.fromJson(exercise);
+      }));
+    } else {
+      print('Error fetching exercises: ${response.statusCode}');
+    }
+  }
 }
 
 class SportPage extends StatefulWidget {
+  const SportPage({super.key});
+
   @override
   _SportPageState createState() => _SportPageState();
 }
 
 class _SportPageState extends State<SportPage> {
-  Future<List<Exercise>>? _futureExercises;
+  ExerciseProxy exerciseProxy = ExerciseProxy();
 
   @override
   void initState() {
     super.initState();
-    _futureExercises = fetchExercises();
+    fetchExercises();
     loadFont();
   }
 
   Future<void> loadFont() async {
     await Future.wait([
-      // Încarcă fontul Gilroy
       rootBundle.load('assets/fonts/gilroy_regular.ttf'),
     ]);
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _futureExercises = fetchExercises();
+  Future<void> fetchExercises() async {
+    await exerciseProxy.fetchExercises();
+    setState(() {});
   }
 
   Future<void> navigateToAddExercisePage() async {
@@ -86,9 +119,7 @@ class _SportPageState extends State<SportPage> {
         builder: (context) => AddExercisePage(),
       ),
     );
-    setState(() {
-      _futureExercises = fetchExercises();
-    });
+    fetchExercises();
   }
 
   Future<void> navigateToExerciseDetailsPage(Exercise exercise) async {
@@ -106,38 +137,40 @@ class _SportPageState extends State<SportPage> {
       appBar: AppBar(
         backgroundColor: Colors.amberAccent,
         elevation: 0,
-        title: Text(
+        title: const Text(
           'EXERCIȚII',
           style: TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.bold,
-              fontFamily: 'Gilroy',
+            fontFamily: 'Gilroy',
           ),
         ),
         centerTitle: true,
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/sport.jpg'),
             fit: BoxFit.cover,
           ),
         ),
+
         child: Stack(
           children: [
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/sport.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
             ),
+
             FutureBuilder<List<Exercise>>(
-              future: _futureExercises,
+              future: exerciseProxy.getExercises(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else if (snapshot.hasError) {
@@ -149,8 +182,9 @@ class _SportPageState extends State<SportPage> {
                   return SingleChildScrollView(
                     child: Column(
                       children: [
+                        const SizedBox(height: 8.0),
                         ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: exercises.length,
                           itemBuilder: (context, index) {
@@ -159,7 +193,7 @@ class _SportPageState extends State<SportPage> {
                                 navigateToExerciseDetailsPage(exercises[index]);
                               },
                               child: Container(
-                                margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                                margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(30.0),
                                   child: BackdropFilter(
@@ -173,7 +207,7 @@ class _SportPageState extends State<SportPage> {
                                         child: Text(
                                           exercises[index].name,
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 30.0,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
@@ -189,7 +223,7 @@ class _SportPageState extends State<SportPage> {
                           },
                         ),
                         Container(
-                          margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(30.0),
                             child: BackdropFilter(
@@ -217,7 +251,7 @@ class _SportPageState extends State<SportPage> {
                     ),
                   );
                 } else {
-                  return Center(
+                  return const Center(
                     child: Text('No exercises found'),
                   );
                 }

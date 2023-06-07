@@ -64,6 +64,8 @@ flutter:
     - assets/images/profile.jpg
     - assets/images/deta.jpg
     - assets/images/meals.jpg
+    - assets/images/addmeal.jpg
+    - assets/images/mealDetails.jpg
 
 
 

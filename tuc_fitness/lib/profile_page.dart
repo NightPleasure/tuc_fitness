@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -114,7 +115,7 @@ class _ProfilePageState extends State<ProfilePage> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text(
+              title: const Text(
                 'Unit Conversion',
                 style: TextStyle(
                   fontSize: 25,
@@ -128,13 +129,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   Text(
                     'Weight: $weight lbs',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                     ),
                   ),
                   Text(
                     'Height: $height inches',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                     ),
                   ),
@@ -147,7 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text(
+                    child: const Text(
                       'OK',
                       style: TextStyle(
                         fontSize: 18,
@@ -160,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     ),
                   ),
                 ),
@@ -224,60 +225,60 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Colors.teal,
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/profile.jpg'),
             fit: BoxFit.cover,
           ),
         ),
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextField(
               controller: nicknameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Nickname',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: emailController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Email',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: ageController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Varsta',
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: weightController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Greutate (kg)',
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: heightController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Inaltime (cm)',
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -295,7 +296,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       horizontal: 40,
                       vertical: 20.0,
                     ),
@@ -318,7 +319,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       vertical: 20.0,
                       horizontal: 40,
                     ),
@@ -329,9 +330,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             CheckboxListTile(
-              title: Text('Notificări'),
+              title: const Text('Notificări'),
               value: isChecked,
               onChanged: (value) {
                 setState(() {
@@ -340,9 +341,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 sendNotification(isChecked);
               },
             ),
-            SizedBox(height: 7),
+            const SizedBox(height: 7),
             if (isSaved)
-              Center(
+              const Center(
                 child: Text(
                   'Datele au fost salvate cu succes.',
                   style: TextStyle(

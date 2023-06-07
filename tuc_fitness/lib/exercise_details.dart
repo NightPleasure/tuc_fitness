@@ -1,12 +1,13 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'main.dart';
 import 'sport_page.dart';
 
 class TimerWidget extends StatefulWidget {
   final int durationInSeconds;
 
-  TimerWidget({required this.durationInSeconds});
+  const TimerWidget({super.key, required this.durationInSeconds});
 
   @override
   _TimerWidgetState createState() => _TimerWidgetState();
@@ -31,7 +32,7 @@ class _TimerWidgetState extends State<TimerWidget> {
       _isPaused = false;
     });
 
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       if (_isRunning && !_isPaused) {
         setState(() {
           _remainingSeconds--;
@@ -73,10 +74,10 @@ class _TimerWidgetState extends State<TimerWidget> {
         ),
         borderRadius: BorderRadius.circular(16.0),
       ),
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          Text(
+          const Text(
             'Timp rămas:',
             style: TextStyle(
               fontSize: 25.0,
@@ -86,8 +87,8 @@ class _TimerWidgetState extends State<TimerWidget> {
           ),
           Text.rich(
             TextSpan(
-              text: '$minutes',
-              style: TextStyle(
+              text: minutes,
+              style: const TextStyle(
                 fontSize: 50.0,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -96,7 +97,7 @@ class _TimerWidgetState extends State<TimerWidget> {
               children: <InlineSpan>[
                 TextSpan(
                   text: ':$seconds',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 50.0,
                     color: Colors.white,
                     fontFamily: 'Gilroy',
@@ -105,12 +106,22 @@ class _TimerWidgetState extends State<TimerWidget> {
               ],
             ),
           ),
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
                 onPressed: _isRunning ? null : _startTimer,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 20.0,
+                    horizontal: 40,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                ),
                 child: Text(
                     'Start',
                   style: TextStyle(
@@ -119,9 +130,13 @@ class _TimerWidgetState extends State<TimerWidget> {
                       fontSize: 20
                   ),
                 ),
+              ),
+              const SizedBox(width: 8.0),
+              ElevatedButton(
+                onPressed: _resetTimer,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: EdgeInsets.symmetric(
+                  backgroundColor: Colors.red,
+                  padding: const EdgeInsets.symmetric(
                     vertical: 20.0,
                     horizontal: 40,
                   ),
@@ -129,10 +144,6 @@ class _TimerWidgetState extends State<TimerWidget> {
                     borderRadius: BorderRadius.circular(50.0),
                   ),
                 ),
-              ),
-              SizedBox(width: 8.0),
-              ElevatedButton(
-                onPressed: _resetTimer,
                 child: Text(
                 'RESET',
                   style: TextStyle(
@@ -141,9 +152,13 @@ class _TimerWidgetState extends State<TimerWidget> {
                       fontSize: 20
                   ),
                 ),
+              ),
+              const SizedBox(width: 8.0),
+              ElevatedButton(
+                onPressed: _isRunning ? _pauseTimer : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding: EdgeInsets.symmetric(
+                  backgroundColor: Colors.green,
+                  padding: const EdgeInsets.symmetric(
                     vertical: 20.0,
                     horizontal: 40,
                   ),
@@ -151,26 +166,12 @@ class _TimerWidgetState extends State<TimerWidget> {
                     borderRadius: BorderRadius.circular(50.0),
                   ),
                 ),
-              ),
-              SizedBox(width: 8.0),
-              ElevatedButton(
-                onPressed: _isRunning ? _pauseTimer : null,
                 child: Text(
                     _isPaused ? 'Pause' : 'Pause',
                   style: TextStyle(
                       color: Colors.white.withOpacity(0.75),
                       fontFamily: 'Gilroy',
                       fontSize: 20
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: EdgeInsets.symmetric(
-                    vertical: 20.0,
-                    horizontal: 40,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50.0),
                   ),
                 ),
               ),
@@ -185,7 +186,7 @@ class _TimerWidgetState extends State<TimerWidget> {
 class ExerciseDetailsPage extends StatelessWidget {
   final Exercise exercise;
 
-  ExerciseDetailsPage({required this.exercise});
+  const ExerciseDetailsPage({super.key, required this.exercise});
 
   Future<void> deleteExercise(int exerciseId, BuildContext context) async {
     final response = await http.delete(Uri.parse('https://localhost:7152/api/Exercise/$exerciseId'));
@@ -194,19 +195,19 @@ class ExerciseDetailsPage extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Notificare'),
-            content: Text('Exercițiul a fost șters cu succes!'),
+            title: const Text('Notificare'),
+            content: const Text('Exercițiul a fost șters cu succes!'),
             actions: <Widget>[
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                 ),
-                child: Text('OK', style: TextStyle(color: Colors.white)),
+                child: const Text('OK', style: TextStyle(color: Colors.white)),
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.pushReplacement(
+                  Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => SportPage()),
+                    MaterialPageRoute(builder: (context) => const FitnessApp()),
+                        (Route<dynamic> route) => false,
                   );
                 },
               ),
@@ -224,10 +225,11 @@ class ExerciseDetailsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.amber.withOpacity(0.85),
-        title: Center(
+        title: const Center(
           child: Text(
             'DETALII EXERCIȚIU',
             style: TextStyle(
+              fontSize: 23,
               color: Colors.white,
               fontFamily: 'Gilroy',
             ),
@@ -237,7 +239,7 @@ class ExerciseDetailsPage extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/images/deta.jpg'),
                 fit: BoxFit.cover,
@@ -249,69 +251,68 @@ class ExerciseDetailsPage extends StatelessWidget {
             child: Container(
               color: Colors.black.withOpacity(0.3),
               child: Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Denumire: ${exercise.name}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 30.0,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                         fontFamily: 'Gilroy',
                       ),
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     Text(
                       'Descriere: ${exercise.description}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 30.0,
                         color: Colors.white,
                         fontFamily: 'Gilroy',
                       ),
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     Text(
                       'Ora de începere: ${exercise.startDoingHour}:${exercise.startDoingMinutes}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 30.0,
                         color: Colors.white,
                         fontFamily: 'Gilroy',
                       ),
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     Text(
                       'Durată: ${exercise.durationInSeconds} secunde',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 30.0,
                         color: Colors.white,
                         fontFamily: 'Gilroy',
                       ),
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     TimerWidget(durationInSeconds: exercise.durationInSeconds),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     ElevatedButton(
                       onPressed: () {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Confirmare ștergere'),
-                              content: Text('Ești sigur că vrei să ștergi acest exercițiu?'),
+                              title: const Text('Confirmare ștergere'),
+                              content: const Text('Ești sigur că vrei să ștergi acest exercițiu?'),
                               actions: [
                                 TextButton(
-                                  child: Text('NU'),
+                                  child: const Text('NU'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
                                 ),
                                 TextButton(
-                                  child: Text('DA'),
+                                  child: const Text('DA'),
                                   onPressed: () {
                                     deleteExercise(exercise.id, context);
-                                    Navigator.of(context).pop();
                                   },
                                 ),
                               ],
@@ -320,8 +321,8 @@ class ExerciseDetailsPage extends StatelessWidget {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        minimumSize: Size(200, 60),
-                        padding: EdgeInsets.all(16.0),
+                        minimumSize: const Size(200, 60),
+                        padding: const EdgeInsets.all(16.0),
                         foregroundColor: Colors.black,
                         backgroundColor: Colors.white.withOpacity(0.13),
                         shape: RoundedRectangleBorder(

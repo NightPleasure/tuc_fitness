@@ -5,9 +5,11 @@ import 'sport_page.dart';
 import 'alimentatie_page.dart';
 import 'profile_page.dart';
 
-void main() => runApp(FitnessApp());
+void main() => runApp(const FitnessApp());
 
 class FitnessApp extends StatelessWidget {
+  const FitnessApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,12 +19,14 @@ class FitnessApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: 'FrontPageNeue',
       ),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -45,7 +49,7 @@ class _HomePageState extends State<HomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ProfilePage(),
+        builder: (context) => const ProfilePage(),
       ),
     );
   }
@@ -64,7 +68,7 @@ class _HomePageState extends State<HomePage> {
           Opacity(
             opacity: 0.60,
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/main.jpg'),
                   fit: BoxFit.cover,
@@ -79,13 +83,13 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 20),
+                  margin: const EdgeInsets.only(top: 20),
                   width: 120,
                   height: 120,
                   decoration: BoxDecoration(
@@ -101,15 +105,15 @@ class _HomePageState extends State<HomePage> {
                   child: InkWell(
                     onTap: _pickImage,
                     child: _image == null
-                        ? Icon(
+                        ? const Icon(
                       Icons.camera_alt,
                       size: 60,
                     )
                         : null,
                   ),
                 ),
-                SizedBox(height: 20),
-                Container(
+                const SizedBox(height: 20),
+                SizedBox(
                   height: 60,
                   child: Material(
                     elevation: 5,
@@ -133,19 +137,19 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Image.asset(
                   'assets/images/logo2.png',
                   width: 200,
                   height: 200,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Container(
+                        SizedBox(
                           height: 200,
                           child: Material(
                             elevation: 10,
@@ -159,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => SportPage(),
+                                    builder: (context) => const SportPage(),
                                   ),
                                 );
                               },
@@ -177,8 +181,8 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 12),
-                        Container(
+                        const SizedBox(height: 12),
+                        SizedBox(
                           height: 200,
                           child: Material(
                             elevation: 10,
@@ -210,7 +214,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                       ],
                     ),
                   ),
